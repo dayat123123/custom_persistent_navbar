@@ -28,21 +28,6 @@ final _navItems = [
       activeIcon: Icons.person,
       name: 'Profile',
       inactiveIcon: Icons.person),
-  BottomNavbarCustomModel(
-      screen: const ProfileScreen(),
-      activeIcon: Icons.person,
-      name: 'Profile',
-      inactiveIcon: Icons.person),
-  BottomNavbarCustomModel(
-      screen: const ProfileScreen(),
-      activeIcon: Icons.person,
-      name: 'Profile',
-      inactiveIcon: Icons.person),
-  BottomNavbarCustomModel(
-      screen: const ProfileScreen(),
-      activeIcon: Icons.person,
-      name: 'Profile',
-      inactiveIcon: Icons.person),
 ];
 
 class PageViewTest extends StatelessWidget {
@@ -57,11 +42,7 @@ class PageViewTest extends StatelessWidget {
               Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                   CupertinoPageRoute(
                 builder: (context) {
-                  return CustomPersistentNavbar(
-                      item: _navItems,
-                      onTabSelected: (p0) {
-                        print(p0);
-                      });
+                  return CustomPersistentNavbar(item: _navItems);
                 },
               ), (route) => false);
             },

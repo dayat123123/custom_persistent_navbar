@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +12,8 @@ class CustomPersistentNavbar extends StatefulWidget {
   final void Function(int)? onTabSelected;
 
   const CustomPersistentNavbar(
-      {super.key, required this.item, this.onTabSelected});
+      {super.key, required this.item, this.onTabSelected})
+      : assert(item.length >= 2, 'item must contain at least 2 items');
 
   @override
   State<CustomPersistentNavbar> createState() => _CustomPersistentNavbarState();

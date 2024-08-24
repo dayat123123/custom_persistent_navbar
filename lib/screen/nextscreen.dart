@@ -24,16 +24,16 @@ class _NextscreenState extends State<Nextscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: const Text('Nextscreen')),
       body: Center(
         child: GestureDetector(
           onTap: () {
             Navigator.push(
               context,
-              CupertinoPageRoute(builder: (context) => const Nextscreen()),
+              CupertinoPageRoute(builder: (context) => Nextscreen()),
             );
           },
-          child: const Text('Profile Page'),
+          child: const Text('Nextscreen Page'),
         ),
       ),
     );

@@ -12,14 +12,14 @@ class BottomNavbarCustom extends StatelessWidget {
     required this.onTap,
     required this.selectedIndex,
     this.onTapOrder,
-  }) : assert(listData.length >= 2, 'listData must contain at least 2 items');
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 7.5),
       alignment: Alignment.topCenter,
-      height: kBottomNavigationBarHeight + 25,
+      height: kBottomNavigationBarHeight + (Platform.isIOS ? 25 : 0),
       decoration: BoxDecoration(
           border: Border(
               top: BorderSide(
@@ -55,7 +55,7 @@ class BottomNavbarCustom extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   AnimatedScale(
-                    scale: selectedIndex == 0 ? 1.2 : 1.0,
+                    scale: selectedIndex == 0 ? 1.1 : 1.0,
                     duration: const Duration(milliseconds: 300),
                     child: Icon(listData[0].activeIcon, color: _color(0)),
                   ),
@@ -74,7 +74,7 @@ class BottomNavbarCustom extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   AnimatedScale(
-                    scale: selectedIndex == actualIndex ? 1.2 : 1.0,
+                    scale: selectedIndex == actualIndex ? 1.1 : 1.0,
                     duration: const Duration(milliseconds: 300),
                     child: Icon(data.activeIcon, color: _color(actualIndex)),
                   ),
@@ -90,12 +90,14 @@ class BottomNavbarCustom extends StatelessWidget {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Icon(Icons.shopping_bag), Text("Order")])));
+                children: [
+                  Icon(Icons.shopping_bag),
+                  Text("Order", style: TextStyle(fontSize: 13))
+                ])));
   }
 
-  TextStyle _textStyle(int index) => TextStyle(
-      color: _color(index),
-      fontWeight: selectedIndex == index ? FontWeight.w500 : FontWeight.normal);
+  TextStyle _textStyle(int index) =>
+      TextStyle(color: _color(index), fontSize: 13);
 
   Color? _color(int index) => selectedIndex == index ? Colors.blue : null;
 }
