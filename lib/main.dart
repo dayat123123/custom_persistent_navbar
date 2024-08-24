@@ -1,41 +1,55 @@
 import 'package:custom_persistent_bottom_navbar/persistent_navbar/persistent_navbar.dart';
+import 'package:custom_persistent_bottom_navbar/screen/homescreen.dart';
+import 'package:custom_persistent_bottom_navbar/screen/profilscreen.dart';
+import 'package:custom_persistent_bottom_navbar/screen/searchscreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: PageView()));
+  runApp(const MaterialApp(
+      debugShowCheckedModeBanner: false, home: PageViewTest()));
 }
 
-final List<Widget> _pages = [
-  const HomeScreen(),
-  const SearchScreen(),
-  const ProfileScreen(),
-];
 final _navItems = [
-  const BottomNavigationBarItem(
-    icon: Icon(Icons.home),
-    label: 'Home',
-  ),
-  const BottomNavigationBarItem(
-    icon: Icon(Icons.search),
-    label: 'Search',
-  ),
-  const BottomNavigationBarItem(
-    icon: Icon(Icons.person),
-    label: 'Profile',
-  ),
+  BottomNavbarCustomModel(
+      screen: const HomeScreen(),
+      activeIcon: const Icon(Icons.home_filled),
+      name: 'Home',
+      inactiveIcon: const Icon(Icons.home)),
+  BottomNavbarCustomModel(
+      screen: const SearchScreen(),
+      activeIcon: const Icon(Icons.search),
+      name: 'Search',
+      inactiveIcon: const Icon(Icons.search)),
+  BottomNavbarCustomModel(
+      screen: const ProfileScreen(),
+      activeIcon: const Icon(Icons.person),
+      name: 'Profile',
+      inactiveIcon: const Icon(Icons.person)),
 ];
 
-class PageView extends StatelessWidget {
-  const PageView({super.key});
+class PageViewTest extends StatelessWidget {
+  const PageViewTest({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CustomPersistentNavbar(
-      item: _navItems,
-      screen: _pages,
-      onTabSelected: (p0) {
-        print(p0);
-      },
+    return Scaffold(
+      body: Center(
+        child: TextButton(
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                  CupertinoPageRoute(
+                builder: (context) {
+                  return CustomPersistentNavbar(
+                      item: _navItems,
+                      onTabSelected: (p0) {
+                        print(p0);
+                      });
+                },
+              ), (route) => false);
+            },
+            child: const Text("Push")),
+      ),
     );
   }
 }

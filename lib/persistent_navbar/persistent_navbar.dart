@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 part 'navigator_manager.dart';
+part 'bottom_navbar.dart';
 
 class CustomPersistentNavbar extends StatefulWidget {
-  final List<BottomNavigationBarItem> item;
-  final List<Widget> screen;
+  final List<BottomNavbarCustomModel> item;
   final void Function(int)? onTabSelected;
+
   const CustomPersistentNavbar({
     super.key,
     required this.item,
-    required this.screen,
     this.onTabSelected,
   });
 
@@ -19,33 +19,37 @@ class CustomPersistentNavbar extends StatefulWidget {
 
 class _CustomPersistentNavbarState extends State<CustomPersistentNavbar> {
   int _selectedIndex = 0;
-  late NavigatorManager _navigatorManager;
+  late final NavigatorManager _navigatorManager;
+  late final List<bool> _isPageInitialized;
 
   @override
   void initState() {
     super.initState();
-    _navigatorManager = NavigatorManager(widget.screen.length);
+    print("Init persistent navbar");
+    _navigatorManager = NavigatorManager(widget.item.length);
+    _isPageInitialized = List<bool>.filled(widget.item.length, false);
+    _isPageInitialized[_selectedIndex] = true;
   }
 
   void _onItemTapped(int index) {
     if (_selectedIndex != index) {
       setState(() {
         _selectedIndex = index;
-        if (widget.onTabSelected != null) widget.onTabSelected!(_selectedIndex);
+        _isPageInitialized[index] = true;
+        if (widget.onTabSelected != null) widget.onTabSelected!(index);
       });
     } else {
       _willPopScope();
     }
   }
 
-  void _willPopScope() {
-    _navigatorManager.willPop(_selectedIndex);
+  void _willPopScope({bool isPopOnce = false}) {
+    _navigatorManager.willPop(_selectedIndex, isPopOnce: isPopOnce);
   }
 
   @override
   void dispose() {
-    print("Dispose");
-    _navigatorManager.dispose();
+    print("Dispose persistent navbar");
     super.dispose();
   }
 
@@ -53,147 +57,24 @@ class _CustomPersistentNavbarState extends State<CustomPersistentNavbar> {
   Widget build(BuildContext context) {
     return PopScope(
         canPop: false,
-        onPopInvoked: (didPop) => _willPopScope(),
+        onPopInvoked: (didPop) => _willPopScope(isPopOnce: true),
         child: Scaffold(
+            appBar: AppBar(title: const Text("Home")),
             body: IndexedStack(
                 index: _selectedIndex,
-                children: widget.screen
-                    .asMap()
-                    .map((index, page) => MapEntry(
-                        index,
-                        Navigator(
-                            key: _navigatorManager.getNavigatorKey(index),
-                            onGenerateRoute: (settings) {
-                              return CupertinoPageRoute(
-                                  builder: (context) => page,
-                                  settings: settings);
-                            })))
-                    .values
-                    .toList()),
-            bottomNavigationBar: Theme(
-                data: ThemeData(
-                    splashFactory: NoSplash.splashFactory,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent),
-                child: BottomNavigationBar(
-                    items: widget.item,
-                    currentIndex: _selectedIndex,
-                    onTap: _onItemTapped))));
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: Center(
-          child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => const WidgetTest()));
-              },
-              child: const Text('Home Page'))),
-    );
-  }
-}
-
-class SearchScreen extends StatelessWidget {
-  const SearchScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Search')),
-      body: Center(
-          child: GestureDetector(
-              onTap: () {
-                // showModalBottomSheet(
-                //   useRootNavigator: true,
-                //   context: context,
-                //   builder: (context) => DraggableScrollableSheet(
-                //     builder: (context, scrollController) {
-                //       return Container();
-                //     },
-                //   ),
-                // );
-
-                Navigator.pushReplacement(
-                  context,
-                  CupertinoPageRoute(builder: (context) => NewPage()),
-                );
-              },
-              child: Text('Search Page'))),
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: Center(
-          child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => const WidgetTest()));
-              },
-              child: Text('Profile Page'))),
-    );
-  }
-}
-
-class WidgetTest extends StatefulWidget {
-  const WidgetTest({super.key});
-
-  @override
-  State<WidgetTest> createState() => _WidgetTestState();
-}
-
-class _WidgetTestState extends State<WidgetTest> {
-  @override
-  void initState() {
-    print("Init");
-    super.initState();
+                children: List.generate(
+                    widget.item.length, (index) => _buildScreen(index))),
+            bottomNavigationBar: BottomNavbarCustom(
+                listData: widget.item, onTap: _onItemTapped)));
   }
 
-  @override
-  void dispose() {
-    print("Dispose");
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: Center(
-          child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => const WidgetTest()));
-              },
-              child: Text('Profile Page'))),
-    );
-  }
-}
-
-class NewPage extends StatelessWidget {
-  const NewPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
+  Widget _buildScreen(int index) {
+    return _isPageInitialized[index]
+        ? Navigator(
+            key: _navigatorManager.getNavigatorKey(index),
+            onGenerateRoute: (settings) => CupertinoPageRoute(
+                builder: (context) => widget.item[index].screen,
+                settings: settings))
+        : const SizedBox.shrink();
   }
 }
