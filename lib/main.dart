@@ -6,26 +6,43 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false, home: PageViewTest()));
+  runApp(MaterialApp(
+      theme: ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
+      home: const PageViewTest()));
 }
 
 final _navItems = [
   BottomNavbarCustomModel(
       screen: const HomeScreen(),
-      activeIcon: const Icon(Icons.home_filled),
+      activeIcon: Icons.home_filled,
       name: 'Home',
-      inactiveIcon: const Icon(Icons.home)),
+      inactiveIcon: Icons.home),
   BottomNavbarCustomModel(
       screen: const SearchScreen(),
-      activeIcon: const Icon(Icons.search),
+      activeIcon: Icons.search,
       name: 'Search',
-      inactiveIcon: const Icon(Icons.search)),
+      inactiveIcon: Icons.search),
   BottomNavbarCustomModel(
       screen: const ProfileScreen(),
-      activeIcon: const Icon(Icons.person),
+      activeIcon: Icons.person,
       name: 'Profile',
-      inactiveIcon: const Icon(Icons.person)),
+      inactiveIcon: Icons.person),
+  BottomNavbarCustomModel(
+      screen: const ProfileScreen(),
+      activeIcon: Icons.person,
+      name: 'Profile',
+      inactiveIcon: Icons.person),
+  BottomNavbarCustomModel(
+      screen: const ProfileScreen(),
+      activeIcon: Icons.person,
+      name: 'Profile',
+      inactiveIcon: Icons.person),
+  BottomNavbarCustomModel(
+      screen: const ProfileScreen(),
+      activeIcon: Icons.person,
+      name: 'Profile',
+      inactiveIcon: Icons.person),
 ];
 
 class PageViewTest extends StatelessWidget {

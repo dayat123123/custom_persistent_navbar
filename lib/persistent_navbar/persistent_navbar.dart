@@ -1,17 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 part 'navigator_manager.dart';
 part 'bottom_navbar.dart';
+part 'bottom_navbar_model.dart';
 
 class CustomPersistentNavbar extends StatefulWidget {
   final List<BottomNavbarCustomModel> item;
   final void Function(int)? onTabSelected;
 
-  const CustomPersistentNavbar({
-    super.key,
-    required this.item,
-    this.onTabSelected,
-  });
+  const CustomPersistentNavbar(
+      {super.key, required this.item, this.onTabSelected});
 
   @override
   State<CustomPersistentNavbar> createState() => _CustomPersistentNavbarState();
@@ -59,22 +58,21 @@ class _CustomPersistentNavbarState extends State<CustomPersistentNavbar> {
         canPop: false,
         onPopInvoked: (didPop) => _willPopScope(isPopOnce: true),
         child: Scaffold(
-            appBar: AppBar(title: const Text("Home")),
             body: IndexedStack(
                 index: _selectedIndex,
                 children: List.generate(
                     widget.item.length, (index) => _buildScreen(index))),
             bottomNavigationBar: BottomNavbarCustom(
-                listData: widget.item, onTap: _onItemTapped)));
+                selectedIndex: _selectedIndex,
+                listData: widget.item,
+                onTap: _onItemTapped)));
   }
 
-  Widget _buildScreen(int index) {
-    return _isPageInitialized[index]
-        ? Navigator(
-            key: _navigatorManager.getNavigatorKey(index),
-            onGenerateRoute: (settings) => CupertinoPageRoute(
-                builder: (context) => widget.item[index].screen,
-                settings: settings))
-        : const SizedBox.shrink();
-  }
+  Widget _buildScreen(int index) => _isPageInitialized[index]
+      ? Navigator(
+          key: _navigatorManager.getNavigatorKey(index),
+          onGenerateRoute: (settings) => CupertinoPageRoute(
+              builder: (context) => widget.item[index].screen,
+              settings: settings))
+      : const SizedBox.shrink();
 }
