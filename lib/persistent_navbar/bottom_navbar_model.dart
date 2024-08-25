@@ -6,10 +6,9 @@ class BottomNavbarCustomModel {
   final IconData inactiveIcon;
   final Widget screen;
 
-  BottomNavbarCustomModel({
-    required this.name,
-    required this.screen,
-    required this.activeIcon,
-    required this.inactiveIcon,
-  });
+  BottomNavbarCustomModel(
+      {required this.name,
+      required this.screen,
+      required this.activeIcon,
+      required this.inactiveIcon});
 }

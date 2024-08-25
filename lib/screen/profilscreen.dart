@@ -28,8 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Center(
         child: GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
+            Navigator.of(context, rootNavigator: false).push(
               CupertinoPageRoute(builder: (context) => const Nextscreen()),
             );
           },

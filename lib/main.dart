@@ -28,6 +28,11 @@ final _navItems = [
       activeIcon: Icons.person,
       name: 'Profile',
       inactiveIcon: Icons.person),
+  BottomNavbarCustomModel(
+      screen: const ProfileScreen(),
+      activeIcon: Icons.person,
+      name: 'Profile',
+      inactiveIcon: Icons.person),
 ];
 
 class PageViewTest extends StatelessWidget {
@@ -42,12 +47,49 @@ class PageViewTest extends StatelessWidget {
               Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                   CupertinoPageRoute(
                 builder: (context) {
-                  return CustomPersistentNavbar(item: _navItems);
+                  return HasilBaru();
                 },
               ), (route) => false);
             },
             child: const Text("Push")),
       ),
+    );
+  }
+}
+
+class HasilBaru extends StatefulWidget {
+  const HasilBaru({super.key});
+
+  @override
+  State<HasilBaru> createState() => _HasilBaruState();
+}
+
+class _HasilBaruState extends State<HasilBaru> {
+  late PersistentNavbarController _controller;
+  @override
+  void initState() {
+    _controller =
+        PersistentNavbarController(initialIndex: 0, length: _navItems.length);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PersistentNavbar(
+          item: _navItems,
+          withText: true,
+          controller: _controller,
+          navbarStyle: NavbarStyle.style1),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        _controller.jumpToTab(3);
+      }),
     );
   }
 }
